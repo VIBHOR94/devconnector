@@ -173,9 +173,9 @@ router.post(
 
     Profile.findOne({ user: req.user.id }).then(profile => {
       const newExp = {
-        school: req.body.school,
-        degree: req.body.degree,
-        fieldofstudy: req.body.fieldofstudy,
+        title: req.body.title,
+        company: req.body.company,
+        location: req.body.location,
         from: req.body.from,
         to: req.body.to,
         current: req.body.current,
@@ -218,6 +218,29 @@ router.post(
       profile.education.unshift(newEdu);
       profile.save().then(profile => res.json(profile));
     });
+  }
+);
+
+//@route   DELETE api/profile/experience/:experience_id
+//@desc    Delete experience from profile
+//@access  Private
+router.delete(
+  "/experience/:experience_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        const removeIndex = profile.experience
+          .map(item => item.id)
+          .indexOf(req.params.exp_id);
+
+        //Splice out of array
+        profile.experience.splice(removeIndex, 1);
+
+        // Save
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 
