@@ -5,17 +5,17 @@ import { ADD_POST, GET_ERRORS } from "./types";
 // Add Post
 export const addPost = postData => dispatch => {
   axios
-    .post("/api/post", postData)
+    .post("/api/posts", postData)
     .then(res =>
       dispatch({
         type: ADD_POST,
-        payload: res_data
+        payload: res.data
       })
     )
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: err.response.body
       })
     );
 };
